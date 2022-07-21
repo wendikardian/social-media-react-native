@@ -1,7 +1,8 @@
 const initialState = {
     username : '',
     email : '',
-    password : ''
+    password : '',
+    isLogin : false
 }
 
 export const profileReducer = (state = initialState, action) => {
@@ -15,6 +16,12 @@ export const profileReducer = (state = initialState, action) => {
             username : newUsername,
             email : newEmail,
             password : newPassword
+        }
+    }else if(action.type === 'LOGIN'){
+        const newLoginStatus = action.payload
+        return{
+            ...state,
+            isLogin: newLoginStatus
         }
     }
     return state

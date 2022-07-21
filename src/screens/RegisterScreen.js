@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity , Alert} from 'react-native'
 import {Button} from '../components/ButtonComponent'
 import {Input} from '../components/InputComponent'
 import {createProfile} from '../../store/actions/profileAction'
@@ -12,22 +12,89 @@ const RegisterScreen = (props) => {
     useEffect(() => {
         console.log(globalProfileData)
     }, [globalProfileData])
+
+    const [form, setForm] = useState({
+        username : '',
+        email: '',
+        password : ''
+    })
+
+    const [isEmailFormat, setIsEmailFormat] = useState(true)
+    const [isPassVisible, setIsPassVisible] = useState(false);
+    const onChangeInput = (inputType, value) => {
+        const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+        if(inputType === 'email'){
+            if(!emailRegex.test(value)){
+                setIsEmailFormat(false)
+            }else{
+                setIsEmailFormat(true)
+            }
+        }
+        setForm({
+            ...form,
+            [inputType] : value
+        })
+    }
+
+    const sendData = () => {
+        if(form.username === '' || form.email === '' || form.password === '' || !isEmailFormat) {
+            alert('Make sure you fill all the field with the right information !')
+        }else {
+            dispatch(createProfile(form))
+            Alert.alert(
+                'Success',
+                'Successfully create an account !',
+                [
+                    {
+                        text : 'OK',
+                        onPress : () => navigation.navigate('Login')
+                    }
+                ]
+                )
+        }
+    }
+
     useEffect(() => {
-        dispatch(createProfile({
-            username: 'Wendi',
-            email : 'wendikardian@gmail.com',
-            password : 'wendi1234'
-        }))
-    }, [])
+        console.log('Global State on Register Page')
+        console.log(globalProfileData)
+    }, [globalProfileData])
+
+    useEffect(() => {
+        console.log('LOCAL STATE');
+        console.log(`username : ${form.username}`)
+        console.log(`email : ${form.email}`)
+        console.log(`password : ${form.password}`)
+    }, [form])
+
+
+    useEffect(() => {
+        if(form.email === '') {
+            setIsEmailFormat(true)
+        }
+    }, [form.email])
+    // useEffect(() => {
+    //     dispatch(createProfile({
+    //         username: 'Wendi',
+    //         email : 'wendikardian@gmail.com',
+    //         password : 'wendi1234'
+    //     }))
+    // }, [])
     return (
         <ScrollView contentContainerStyle={styles.scroll}>
             <View style={styles.mainContainer}>
                 <View style={styles.inputContainer}>
-                    <Input title="Username" placeholder="Username" />
-                    <Input title="Email" placeholder="Email" />
-                    <Input title="Password" placeholder="Password" />
+                    <Input title="Username" placeholder="Username" onChangeText={(text) => onChangeInput('username', text)} />
+                    <Input title="Email" placeholder="Email" onChangeText={(text) => onChangeInput('email', text)} />
+                    {
+                        isEmailFormat ? null : <View style={styles.warningContainer}>
+                            <Text style={styles.warning}> 
+                                Please input the right email format !
+                            </Text>
+                        </View>
+                    }
+                    <Input title="Password" placeholder="Password" secureTextEntry={isPassVisible ? false : true} iconName={isPassVisible ? 'eye-off' : 'eye'} onPress={() => setIsPassVisible(!isPassVisible)} isPassword={true} onChangeText={(text) => onChangeInput('password', text)} />
                 </View>
-                <Button text="Register" />
+                <Button text="Register" onPress={() => sendData()} />
                 <View style={styles.textContainer}>
                     <Text style={styles.text}>
                         Already have an account ?
@@ -59,6 +126,11 @@ const styles = StyleSheet.create({
     }, loginText : {
         color: '#1A5B0A',
         fontSize: 16
+    }, warningContainer : {
+        marginBottom : 16,
+        marginLeft : 16
+    }, warning : {
+        color: 'red'
     }
 })
 

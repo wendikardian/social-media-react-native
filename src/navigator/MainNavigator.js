@@ -57,7 +57,12 @@ const MainNavigator = () => {
         isLogin ? 
         <Stack.Navigator initialRouteName="Start">
           <Stack.Screen name="Start" component={StartScreen} options={{headerShown: false}} />
-        </Stack.Navigator> :
+        </Stack.Navigator>
+        
+        :
+        // <Stack.Navigator initialRouteName="Profile">
+        //   <Stack.Screen name="Profile" component={ProfileScreen} />
+        // </Stack.Navigator>
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
           <Stack.Screen name="Register" component={RegisterScreen} options={{headerTitleAlign: 'center', headerLeft : null}} />

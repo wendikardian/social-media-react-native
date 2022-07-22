@@ -60,8 +60,8 @@ const MainNavigator = () => {
         </Stack.Navigator>
         
         :
-        // <Stack.Navigator initialRouteName="Profile">
-        //   <Stack.Screen name="Profile" component={ProfileScreen} />
+        // <Stack.Navigator initialRouteName="Home">
+        //   <Stack.Screen name="Home" component={HomeScreen} />
         // </Stack.Navigator>
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
